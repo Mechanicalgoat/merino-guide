@@ -18,6 +18,8 @@ ROOT        = Path(__file__).parent.parent
 SRC_DIR     = Path("D:/ClaudeCodemovie/merino-video/public/character/material")
 DEST_DIR    = ROOT / "public" / "images" / "merino"
 CROP_RATIO  = 0.62   # 上部何%を残すか（足・ブーツを切り取る）
+CANVAS_W    = 620    # 正規化キャンバス幅（全画像統一）
+CANVAS_H    = 720    # 正規化キャンバス高さ（全画像統一）
 
 # ── material名 → ガイド用ファイル名マッピング ─────────────
 MAPPING = {
@@ -68,10 +70,30 @@ CHECKLIST = """
 
 
 def crop_upper(img: Image.Image, ratio: float) -> Image.Image:
-    """上部 ratio 分をクロップして返す"""
+    """上部 ratio 分をクロップして返す（足・ブーツ除去）"""
     w, h = img.size
     new_h = int(h * ratio)
     return img.crop((0, 0, w, new_h))
+
+
+def normalize_canvas(img: Image.Image, canvas_w: int, canvas_h: int) -> Image.Image:
+    """
+    指定キャンバスサイズに正規化する。
+    - はみ出す場合はスケールダウン
+    - 水平中央・下端揃えで配置
+    → object-contain object-bottom 使用時にキャラが全画像で同スケール・同位置になる
+    """
+    iw, ih = img.size
+    scale = min(canvas_w / iw, canvas_h / ih, 1.0)
+    if scale < 1.0:
+        img = img.resize((int(iw * scale), int(ih * scale)), Image.LANCZOS)
+        iw, ih = img.size
+
+    canvas = Image.new("RGBA", (canvas_w, canvas_h), (0, 0, 0, 0))
+    paste_x = (canvas_w - iw) // 2   # 水平中央
+    paste_y =  canvas_h - ih          # 下端揃え
+    canvas.paste(img, (paste_x, paste_y), img)
+    return canvas
 
 
 def main():
@@ -88,11 +110,12 @@ def main():
             skipped.append(src_name)
             continue
 
-        img     = Image.open(src_path).convert("RGBA")
-        cropped = crop_upper(img, CROP_RATIO)
-        cropped.save(dest_path, "PNG", optimize=True)
+        img        = Image.open(src_path).convert("RGBA")
+        cropped    = crop_upper(img, CROP_RATIO)
+        normalized = normalize_canvas(cropped, CANVAS_W, CANVAS_H)
+        normalized.save(dest_path, "PNG", optimize=True)
 
-        w, h = cropped.size
+        w, h = normalized.size
         print(f"  [OK]   {src_name}.png → {dest_name}.png  ({w}×{h}px)")
         ok.append(dest_name)
 
