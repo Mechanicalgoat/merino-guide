@@ -41,7 +41,7 @@ export default function Home() {
             {/* キャラ右 */}
             <div className="relative bg-mint/30 border-t-4 md:border-t-0 md:border-l-4 border-border w-full md:w-52 h-48 md:h-auto shrink-0 overflow-hidden">
               <Image
-                src="/images/merino/merino-happy.png"
+                src="/images/merino/merino-hero.png"
                 alt="メリノちゃん"
                 fill
                 className="object-cover object-top"
