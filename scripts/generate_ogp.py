@@ -18,7 +18,16 @@ except ImportError:
 ROOT         = Path(__file__).parent.parent
 ARTICLES_DIR = ROOT / "content" / "articles"
 OUTPUT_DIR   = ROOT / "public" / "images" / "ogp"
-MERINO_IMG   = ROOT / "public" / "images" / "merino" / "merino-explain.png"
+MERINO_DIR   = ROOT / "public" / "images" / "merino"
+
+# カテゴリ別メリノちゃん画像（constants.tsと同期）
+MERINO_BY_CATEGORY = {
+    "model":           "merino-recommend",
+    "getting-started": "merino-explain",
+    "software":        "merino-thinking",
+    "equipment":       "merino-point",
+    "management":      "merino-surprise",
+}
 
 W, H   = 1200, 630
 SPLIT  = 680   # 左ゾーン幅（テキスト専用）
@@ -129,11 +138,15 @@ def px_wrap(draw: ImageDraw.ImageDraw, text: str, fnt,
 
 
 # ── メリノちゃん読み込み ──────────────────────────────────
-def load_merino() -> Image.Image | None:
-    if not MERINO_IMG.exists():
+def load_merino(category: str = "getting-started") -> Image.Image | None:
+    name = MERINO_BY_CATEGORY.get(category, "merino-explain")
+    path = MERINO_DIR / f"{name}.png"
+    if not path.exists():
+        path = MERINO_DIR / "merino-explain.png"
+    if not path.exists():
         return None
     try:
-        img = Image.open(MERINO_IMG).convert("RGBA")
+        img = Image.open(path).convert("RGBA")
         char_zone_w = W - SPLIT - BORDER  # 右ゾーン幅
         # フルハイトでスケール、頭が絶対切れないよう少し余裕を持たせる
         scale = (H - 20) / img.height
@@ -192,7 +205,7 @@ def generate_ogp(title: str, category: str, slug: str) -> Path:
     # ─────────────────────────────────────────────────────
     # メリノちゃん：右ゾーン中央、ボトムアンカー
     # ─────────────────────────────────────────────────────
-    merino = load_merino()
+    merino = load_merino(category)
     if merino:
         char_zone_w = W - SPLIT
         # 右ゾーン内で水平中央寄せ

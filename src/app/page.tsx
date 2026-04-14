@@ -7,50 +7,72 @@ export default function Home() {
   const articles = getAllArticles();
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12">
-      {/* ヒーロー */}
-      <section className="text-center mb-16">
-        <div className="inline-block bg-mint border-4 border-border rounded-2xl px-6 py-2 mb-6 shadow-[4px_4px_0px_0px_var(--color-border)] rotate-[-1deg]">
-          <span className="font-bold text-sm">VTuber はじめてガイド</span>
-        </div>
-        <h1 className="text-4xl sm:text-5xl font-black mb-4 leading-tight">
-          メリノちゃんの<br />VTuberガイド
-        </h1>
-        <p className="text-lg text-navy/70 max-w-xl mx-auto leading-relaxed">
-          VTuberを始めたいあなたへ。<br />
-          モデルの選び方から配信のコツまで、メリノちゃんがやさしく解説するよ！
-        </p>
-        <div className="mt-8 inline-flex items-center gap-3 bg-white border-4 border-border rounded-2xl px-6 py-4 shadow-[4px_4px_0px_0px_var(--color-border)]">
-          <div className="w-12 h-12 border-2 border-border rounded-full overflow-hidden bg-white shrink-0">
-            <Image
-              src="/images/merino/merino-explain.png"
-              alt="メリノちゃん"
-              width={48}
-              height={48}
-              className="object-cover"
-            />
+    <div className="max-w-5xl mx-auto px-6 py-12">
+
+      {/* ── Hero ── editorial × Neubrutalism */}
+      <section className="mb-16">
+        <div className="bg-white border-4 border-border rounded-2xl overflow-hidden shadow-[6px_6px_0_var(--color-border)]">
+          <div className="flex flex-col md:flex-row">
+
+            {/* テキスト左 */}
+            <div className="flex-1 p-8 md:p-10">
+              {/* 上部カラーライン */}
+              <div className="flex gap-1.5 mb-6">
+                <span className="h-2 w-8 bg-mint rounded-full border border-border" />
+                <span className="h-2 w-4 bg-peach rounded-full border border-border" />
+                <span className="h-2 w-6 bg-lavender rounded-full border border-border" />
+              </div>
+
+              <p className="text-xs font-black tracking-widest text-navy/40 uppercase mb-3">
+                VTuber Starter Guide
+              </p>
+              <h1 className="text-4xl sm:text-5xl font-black leading-[1.1] mb-5 tracking-tight">
+                メリノちゃんの<br />
+                <span className="relative inline-block">
+                  VTuberガイド
+                  <span className="absolute -bottom-1 left-0 w-full h-1.5 bg-mint" />
+                </span>
+              </h1>
+              <p className="text-base text-navy/60 leading-relaxed max-w-sm">
+                VTuberを始めたいあなたへ。モデルの選び方から配信のコツまで、メリノちゃんがわかりやすく解説します。
+              </p>
+            </div>
+
+            {/* キャラ右 */}
+            <div className="relative bg-mint/30 border-t-4 md:border-t-0 md:border-l-4 border-border w-full md:w-52 h-48 md:h-auto shrink-0 overflow-hidden">
+              <Image
+                src="/images/merino/merino-happy.png"
+                alt="メリノちゃん"
+                fill
+                className="object-cover object-top"
+                priority
+              />
+            </div>
+
           </div>
-          <p className="text-sm font-bold text-left">
-            メリノちゃんがナビゲートするよ！<br />
-            <span className="text-navy/50 font-normal">気になる記事をチェックしてね</span>
-          </p>
         </div>
       </section>
 
-      {/* カテゴリフィルター */}
-      <section className="mb-8">
+      {/* ── カテゴリ ── */}
+      <section className="mb-10">
+        <div className="flex items-center gap-4 mb-4">
+          <h2 className="text-sm font-black tracking-widest uppercase text-navy/40">
+            Category
+          </h2>
+          <div className="flex-1 h-px bg-border/20" />
+        </div>
         <CategoryFilter />
       </section>
 
-      {/* 記事一覧 */}
+      {/* ── 記事一覧 ── */}
       <section>
-        <h2 className="text-2xl font-black mb-8">
-          <span className="bg-yellow border-4 border-border rounded-xl px-5 py-1.5 inline-block shadow-[4px_4px_0px_0px_var(--color-border)]">
-            最新の記事
-          </span>
-        </h2>
+        <div className="flex items-center gap-4 mb-6">
+          <h2 className="text-2xl font-black">最新の記事</h2>
+          <div className="flex-1 h-1 bg-border rounded-full" />
+        </div>
         <ArticleList articles={articles} />
       </section>
+
     </div>
   );
 }
