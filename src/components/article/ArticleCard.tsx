@@ -49,14 +49,14 @@ export default function ArticleCard({
           {/* 右側カテゴリカラーグラデーション */}
           <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-transparent/30 ${gradTo} opacity-80`} />
 
-          {/* メリノちゃん（右端・左向き） */}
-          <div className="absolute right-0 bottom-0 w-28 h-36 [transform:scaleX(-1)]">
+          {/* メリノちゃん（右端・左向き・バストアップ） */}
+          <div className="absolute -right-4 -bottom-8 w-48 h-56 [transform:scaleX(-1)]">
             <Image
               src={merinoSrc}
               alt={`メリノちゃん（${category?.label ?? ""}）`}
               fill
               className="object-contain object-bottom"
-              sizes="112px"
+              sizes="192px"
             />
           </div>
 
