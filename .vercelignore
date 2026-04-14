@@ -1,0 +1,8 @@
+.env*
+*.pem
+*.key
+credentials*
+secrets*
+node_modules
+.git
+docs/reference
