@@ -45,7 +45,7 @@ export function getArticleBySlug(slug: string): Article {
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(fileContent);
   return {
-    frontmatter: data as ArticleFrontmatter,
+    frontmatter: { slug, ...data } as ArticleFrontmatter,
     content,
   };
 }
