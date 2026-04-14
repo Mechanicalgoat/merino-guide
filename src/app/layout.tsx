@@ -6,6 +6,10 @@ import { SiteJsonLd } from "@/components/JsonLd";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants";
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
   metadataBase: new URL(SITE_URL),
   title: {
     default: SITE_NAME,

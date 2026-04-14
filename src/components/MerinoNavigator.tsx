@@ -152,33 +152,30 @@ export default function MerinoNavigator({
   const accent = MOOD_ACCENT[mood] ?? "bg-mint";
 
   return (
-    <div className="flex items-end gap-0 my-8 not-prose">
+    <div className="flex items-start gap-3 my-8 not-prose">
 
-      {/* ── キャラクター ──────────────────────────────────────
-          object-contain object-bottom: クロップ済み上半身画像を
-          コンテナ下端に揃えて表示                              */}
-      <div className="shrink-0 relative w-24 h-36 sm:w-28 sm:h-40">
+      {/* ── 丸アイコン ─────────────────────────────────────── */}
+      <div className={`shrink-0 relative w-12 h-12 sm:w-14 sm:h-14 rounded-full border-3 border-border ${accent} overflow-hidden shadow-[2px_2px_0px_0px_var(--color-border)]`}>
         <Image
           src={src}
           alt={alt}
           fill
-          sizes="112px"
-          className="object-contain object-bottom"
+          sizes="56px"
+          className="object-cover object-top scale-[1.8] translate-y-[30%]"
         />
       </div>
 
       {/* ── 吹き出し ──────────────────────────────────────────
-          全ムード共通：白地 + 上部 3px アクセントバーでムード表現
-          rounded-bl-none でキャラ側をシャープに → テール代わり  */}
-      <div className="flex-1 bg-white border-3 border-border rounded-2xl rounded-bl-none mb-3 shadow-[3px_3px_0px_0px_var(--color-border)] overflow-hidden">
+          丸い吹き出し + 左上アクセントバー                      */}
+      <div className="flex-1 bg-white border-3 border-border rounded-2xl shadow-[3px_3px_0px_0px_var(--color-border)] overflow-hidden">
         <div className={`h-[3px] w-full ${accent}`} />
         <div className="px-5 py-4">
-          <p className="text-xs font-black text-navy/35 mb-1.5 tracking-wide">
+          <span className="text-xs font-black text-navy/35 mb-1.5 tracking-wide block">
             メリノちゃん
-          </p>
-          <p className="text-sm sm:text-base leading-relaxed font-bold text-navy">
+          </span>
+          <div className="text-sm sm:text-base leading-relaxed font-bold text-navy">
             {children}
-          </p>
+          </div>
         </div>
       </div>
 
