@@ -1,46 +1,143 @@
 import Image from "next/image";
 
-export type MoodType = "explain" | "surprise" | "recommend" | "thinking" | "happy" | "point";
+export type MoodType =
+  // ── 基本（既存） ──────────────────────────
+  | "explain"       // 両手広げて説明
+  | "happy"         // 笑顔・目閉じ
+  | "point"         // 指を上に向ける
+  | "recommend"     // ウインク・おすすめ
+  | "surprise"      // 驚き
+  | "thinking"      // 考える（正面向き）
+  // ── 表情追加 ─────────────────────────────
+  | "serious"       // 真剣・シリアス
+  | "smile"         // 優しい微笑み
+  | "laugh"         // 笑い・目閉じ笑顔
+  | "worried"       // 心配・不安
+  | "angry"         // 怒り
+  | "embarrassed"   // 恥ずかしい・照れ
+  | "love"          // ハート・ラブ
+  | "excited"       // 興奮・テンション高め
+  | "cheer"         // バンザイ・大喜び
+  | "sad"           // 悲しい
+  | "shocked"       // 叫び・大驚き
+  | "nervous"       // 緊張・不安
+  | "dejected"      // 落ち込み
+  | "sideEye"       // 半目・疑い
+  // ── ジェスチャー ─────────────────────────
+  | "thumbsup"      // サムズアップ
+  | "wave"          // 手を振る
+  | "peace"         // ダブルピース
+  | "ok"            // OKサイン
+  | "armsCrossed"   // 腕組み
+  | "determined"    // 気合い・ガッツポーズ
+  | "stop"          // ストップ
+  // ── シチュエーション ──────────────────────
+  | "mic"           // マイクを持つ
+  | "singing"       // 歌
+  | "gaming"        // ゲーミング・PC作業
+  | "panic";        // パニック
 
-/** キャラ画像マッピング
- *  thinking は正面向きの explain を仮使用（横向きポーズで別デザインに見えるため）
- *  → 差し替え素材が届いたら merino-thinking.png を再配置して下記を戻す
- */
 const MOOD_IMAGES: Record<MoodType, string> = {
-  explain:   "/images/merino/merino-explain.png",
-  surprise:  "/images/merino/merino-surprise.png",
-  recommend: "/images/merino/merino-recommend.png",
-  thinking:  "/images/merino/merino-explain.png",   // TODO: 正面向き thinking 素材に差し替え
-  happy:     "/images/merino/merino-happy.png",
-  point:     "/images/merino/merino-point.png",
+  explain:      "/images/merino/merino-explain.png",
+  happy:        "/images/merino/merino-happy.png",
+  point:        "/images/merino/merino-point.png",
+  recommend:    "/images/merino/merino-recommend.png",
+  surprise:     "/images/merino/merino-surprise.png",
+  thinking:     "/images/merino/merino-thinking.png",
+  serious:      "/images/merino/merino-serious.png",
+  smile:        "/images/merino/merino-smile.png",
+  laugh:        "/images/merino/merino-laugh.png",
+  worried:      "/images/merino/merino-worried.png",
+  angry:        "/images/merino/merino-angry.png",
+  embarrassed:  "/images/merino/merino-embarrassed.png",
+  love:         "/images/merino/merino-love.png",
+  excited:      "/images/merino/merino-excited.png",
+  cheer:        "/images/merino/merino-cheer.png",
+  sad:          "/images/merino/merino-sad.png",
+  shocked:      "/images/merino/merino-shocked.png",
+  nervous:      "/images/merino/merino-nervous.png",
+  dejected:     "/images/merino/merino-dejected.png",
+  sideEye:      "/images/merino/merino-side-eye.png",
+  thumbsup:     "/images/merino/merino-thumbsup.png",
+  wave:         "/images/merino/merino-wave.png",
+  peace:        "/images/merino/merino-peace.png",
+  ok:           "/images/merino/merino-ok.png",
+  armsCrossed:  "/images/merino/merino-arms-crossed.png",
+  determined:   "/images/merino/merino-determined.png",
+  stop:         "/images/merino/merino-stop.png",
+  mic:          "/images/merino/merino-mic.png",
+  singing:      "/images/merino/merino-singing.png",
+  gaming:       "/images/merino/merino-gaming.png",
+  panic:        "/images/merino/merino-panic.png",
 };
 
-/** ムード別：吹き出し上部アクセントバーの色（細いラインで統一感を保ちつつ区別） */
+/** ムード別：吹き出し上部アクセントバーの色 */
 const MOOD_ACCENT: Record<MoodType, string> = {
-  explain:   "bg-mint",
-  surprise:  "bg-peach",
-  recommend: "bg-lavender",
-  thinking:  "bg-yellow",
-  happy:     "bg-mint",
-  point:     "bg-yellow",
-};
-
-const MOOD_LABEL: Record<MoodType, string> = {
-  explain:   "メリノちゃん",
-  surprise:  "メリノちゃん",
-  recommend: "メリノちゃん",
-  thinking:  "メリノちゃん",
-  happy:     "メリノちゃん",
-  point:     "メリノちゃん",
+  explain:     "bg-mint",
+  happy:       "bg-mint",
+  point:       "bg-yellow",
+  recommend:   "bg-lavender",
+  surprise:    "bg-peach",
+  thinking:    "bg-yellow",
+  serious:     "bg-navy/40",
+  smile:       "bg-mint",
+  laugh:       "bg-mint",
+  worried:     "bg-yellow",
+  angry:       "bg-peach",
+  embarrassed: "bg-lavender",
+  love:        "bg-lavender",
+  excited:     "bg-peach",
+  cheer:       "bg-mint",
+  sad:         "bg-lavender",
+  shocked:     "bg-peach",
+  nervous:     "bg-yellow",
+  dejected:    "bg-navy/20",
+  sideEye:     "bg-yellow",
+  thumbsup:    "bg-mint",
+  wave:        "bg-mint",
+  peace:       "bg-mint",
+  ok:          "bg-mint",
+  armsCrossed: "bg-navy/30",
+  determined:  "bg-peach",
+  stop:        "bg-peach",
+  mic:         "bg-lavender",
+  singing:     "bg-lavender",
+  gaming:      "bg-mint",
+  panic:       "bg-peach",
 };
 
 const MOOD_ALT: Record<MoodType, string> = {
-  explain:   "説明するメリノちゃん",
-  surprise:  "驚くメリノちゃん",
-  recommend: "おすすめするメリノちゃん",
-  thinking:  "考えるメリノちゃん",
-  happy:     "喜ぶメリノちゃん",
-  point:     "ポイントを伝えるメリノちゃん",
+  explain:     "説明するメリノちゃん",
+  happy:       "笑顔のメリノちゃん",
+  point:       "ポイントを伝えるメリノちゃん",
+  recommend:   "おすすめするメリノちゃん",
+  surprise:    "驚くメリノちゃん",
+  thinking:    "考えるメリノちゃん",
+  serious:     "真剣なメリノちゃん",
+  smile:       "微笑むメリノちゃん",
+  laugh:       "笑うメリノちゃん",
+  worried:     "心配するメリノちゃん",
+  angry:       "怒るメリノちゃん",
+  embarrassed: "恥ずかしがるメリノちゃん",
+  love:        "ラブなメリノちゃん",
+  excited:     "興奮するメリノちゃん",
+  cheer:       "大喜びするメリノちゃん",
+  sad:         "悲しむメリノちゃん",
+  shocked:     "大驚きするメリノちゃん",
+  nervous:     "緊張するメリノちゃん",
+  dejected:    "落ち込むメリノちゃん",
+  sideEye:     "疑うメリノちゃん",
+  thumbsup:    "サムズアップするメリノちゃん",
+  wave:        "手を振るメリノちゃん",
+  peace:       "ピースするメリノちゃん",
+  ok:          "OKサインのメリノちゃん",
+  armsCrossed: "腕を組むメリノちゃん",
+  determined:  "気合いを入れるメリノちゃん",
+  stop:        "ストップするメリノちゃん",
+  mic:         "マイクを持つメリノちゃん",
+  singing:     "歌うメリノちゃん",
+  gaming:      "ゲームするメリノちゃん",
+  panic:       "パニックなメリノちゃん",
 };
 
 export default function MerinoNavigator({
@@ -50,17 +147,16 @@ export default function MerinoNavigator({
   mood?: MoodType;
   children: React.ReactNode;
 }) {
-  const src    = MOOD_IMAGES[mood];
-  const alt    = MOOD_ALT[mood];
-  const accent = MOOD_ACCENT[mood];
-  const label  = MOOD_LABEL[mood];
+  const src    = MOOD_IMAGES[mood] ?? MOOD_IMAGES.explain;
+  const alt    = MOOD_ALT[mood]    ?? MOOD_ALT.explain;
+  const accent = MOOD_ACCENT[mood] ?? "bg-mint";
 
   return (
     <div className="flex items-end gap-0 my-8 not-prose">
 
-      {/* ── キャラクター ─────────────────────────────────────────
-          ・縦長コンテナで全身表示（object-contain object-bottom）
-          ・元画像はすでに右向き/正面なのでフリップなし            */}
+      {/* ── キャラクター ──────────────────────────────────────
+          object-contain object-bottom: クロップ済み上半身画像を
+          コンテナ下端に揃えて表示                              */}
       <div className="shrink-0 relative w-24 h-36 sm:w-28 sm:h-40">
         <Image
           src={src}
@@ -71,18 +167,14 @@ export default function MerinoNavigator({
         />
       </div>
 
-      {/* ── 吹き出し ──────────────────────────────────────────────
-          ・全ムード共通：白地 + 細いアクセントバーのみでムード表現
-          ・rounded-bl-none でキャラ側をシャープに → テール代わり
-          ・mb-3 でキャラの足元より少し上に浮かせる               */}
+      {/* ── 吹き出し ──────────────────────────────────────────
+          全ムード共通：白地 + 上部 3px アクセントバーでムード表現
+          rounded-bl-none でキャラ側をシャープに → テール代わり  */}
       <div className="flex-1 bg-white border-3 border-border rounded-2xl rounded-bl-none mb-3 shadow-[3px_3px_0px_0px_var(--color-border)] overflow-hidden">
-        {/* ムード別アクセントバー（上部 3px） */}
         <div className={`h-[3px] w-full ${accent}`} />
-
         <div className="px-5 py-4">
-          {/* 話者ラベル */}
           <p className="text-xs font-black text-navy/35 mb-1.5 tracking-wide">
-            {label}
+            メリノちゃん
           </p>
           <p className="text-sm sm:text-base leading-relaxed font-bold text-navy">
             {children}
