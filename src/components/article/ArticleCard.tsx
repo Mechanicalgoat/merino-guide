@@ -50,7 +50,7 @@ export default function ArticleCard({
           <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-transparent/30 ${gradTo} opacity-80`} />
 
           {/* メリノちゃん（右端・左向き・バストアップ） */}
-          <div className="absolute -right-4 -bottom-8 w-48 h-56 [transform:scaleX(-1)]">
+          <div className="absolute -right-4 -bottom-16 w-48 h-56 [transform:scaleX(-1)]">
             <Image
               src={merinoSrc}
               alt={`メリノちゃん（${category?.label ?? ""}）`}
