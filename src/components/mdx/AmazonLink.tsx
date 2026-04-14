@@ -1,3 +1,5 @@
+import { ShoppingCart, ExternalLink } from "lucide-react";
+
 export default function AmazonLink({
   asin,
   title,
@@ -15,18 +17,24 @@ export default function AmazonLink({
         href={`https://www.amazon.co.jp/dp/${safeAsin}?tag=merinokobo-22`}
         target="_blank"
         rel="nofollow sponsored noopener noreferrer"
-        className="flex items-center gap-4 bg-white border-3 border-border rounded-xl p-5 shadow-[4px_4px_0px_0px_var(--color-border)] hover:shadow-[2px_2px_0px_0px_var(--color-border)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+        className="flex items-center gap-4 bg-white border-3 border-border rounded-xl p-5 shadow-[4px_4px_0px_0px_var(--color-border)] hover:shadow-[2px_2px_0px_0px_var(--color-border)] hover:bg-cream transition-all"
       >
-        <div className="shrink-0 text-3xl">📦</div>
+        {/* カートアイコン */}
+        <div className="shrink-0 w-12 h-12 bg-yellow border-3 border-border rounded-xl flex items-center justify-center shadow-[2px_2px_0px_0px_var(--color-border)]">
+          <ShoppingCart size={22} aria-hidden="true" className="text-navy" />
+        </div>
+
         <div className="flex-1 min-w-0">
-          <p className="font-black text-sm leading-snug truncate">{title}</p>
+          <p className="font-black text-sm leading-snug line-clamp-2">{title}</p>
           {price && (
             <p className="text-peach font-black text-lg mt-1">{price}</p>
           )}
-          <p className="text-xs text-navy/40 mt-1">Amazon.co.jp で見る</p>
+          <p className="text-xs text-navy/40 mt-1 font-bold">Amazon.co.jp で見る</p>
         </div>
-        <div className="shrink-0 bg-yellow border-2 border-border rounded-lg px-3 py-1.5 font-black text-xs shadow-[2px_2px_0px_0px_var(--color-border)]">
-          詳細 →
+
+        <div className="shrink-0 flex items-center gap-1 bg-yellow border-2 border-border rounded-lg px-3 py-1.5 font-black text-xs shadow-[2px_2px_0px_0px_var(--color-border)]">
+          詳細
+          <ExternalLink size={12} aria-hidden="true" />
         </div>
       </a>
     </div>
