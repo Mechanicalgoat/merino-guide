@@ -15,7 +15,8 @@ function renderBody(text: string) {
   });
 }
 
-export default function StepGuide({ steps }: { steps: Step[] }) {
+export default function StepGuide({ steps = [] }: { steps?: Step[] }) {
+  if (!steps.length) return null;
   return (
     <div className="my-6 not-prose space-y-3">
       {steps.map((step, i) => (

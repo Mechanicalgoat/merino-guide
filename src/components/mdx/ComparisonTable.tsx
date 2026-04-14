@@ -1,10 +1,11 @@
 export default function ComparisonTable({
-  headers,
-  rows,
+  headers = [],
+  rows = [],
 }: {
-  headers: string[];
-  rows: string[][];
+  headers?: string[];
+  rows?: string[][];
 }) {
+  if (!headers.length || !rows.length) return null;
   return (
     <div className="overflow-x-auto my-6 not-prose">
       <table className="w-full border-3 border-border rounded-xl overflow-hidden">
