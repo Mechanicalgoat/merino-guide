@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "メリノ工房", url: "https://merino-kobo.com" }],
   creator: "メリノ工房",
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+  },
   openGraph: {
     type: "website",
     locale: "ja_JP",
