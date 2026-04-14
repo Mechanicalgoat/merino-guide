@@ -17,7 +17,7 @@ const CTA_DATA: Record<
     label:  "nizima",
     color:  "text-purple-600",
     bg:     "bg-lavender/20",
-    url:    "https://www.nizima.com/Profile/Detail?userId=1066453",
+    url:    "https://nizima.com/Profile/220566",
     icon:   Store,
   },
 };

@@ -31,9 +31,9 @@ export default function StepGuide({ steps = [] }: { steps?: Step[] }) {
 
           <div>
             <h4 className="font-black text-base mb-1">{step.title}</h4>
-            <p className="text-sm text-navy/70 leading-relaxed">
+            <div className="text-sm text-navy/70 leading-relaxed">
               {renderBody(step.body)}
-            </p>
+            </div>
           </div>
         </div>
       ))}

@@ -71,39 +71,34 @@ const MOOD_IMAGES: Record<MoodType, string> = {
   panic:        "/images/merino/merino-panic.png",
 };
 
-/** ムード別：吹き出し上部アクセントバーの色 */
-const MOOD_ACCENT: Record<MoodType, string> = {
-  explain:     "bg-mint",
-  happy:       "bg-mint",
-  point:       "bg-yellow",
-  recommend:   "bg-lavender",
-  surprise:    "bg-peach",
-  thinking:    "bg-yellow",
-  serious:     "bg-navy/40",
-  smile:       "bg-mint",
-  laugh:       "bg-mint",
-  worried:     "bg-yellow",
-  angry:       "bg-peach",
-  embarrassed: "bg-lavender",
-  love:        "bg-lavender",
-  excited:     "bg-peach",
-  cheer:       "bg-mint",
-  sad:         "bg-lavender",
-  shocked:     "bg-peach",
-  nervous:     "bg-yellow",
-  dejected:    "bg-navy/20",
-  sideEye:     "bg-yellow",
-  thumbsup:    "bg-mint",
-  wave:        "bg-mint",
-  peace:       "bg-mint",
-  ok:          "bg-mint",
-  armsCrossed: "bg-navy/30",
-  determined:  "bg-peach",
-  stop:        "bg-peach",
-  mic:         "bg-lavender",
-  singing:     "bg-lavender",
-  gaming:      "bg-mint",
+/** ムード別：アイコン背景色 */
+const MOOD_BG: Record<MoodType, string> = {
+  explain:     "bg-mint",      happy:       "bg-mint",      point:       "bg-yellow",
+  recommend:   "bg-lavender",  surprise:    "bg-peach",     thinking:    "bg-yellow",
+  serious:     "bg-navy/40",   smile:       "bg-mint",      laugh:       "bg-mint",
+  worried:     "bg-yellow",    angry:       "bg-peach",     embarrassed: "bg-lavender",
+  love:        "bg-lavender",  excited:     "bg-peach",     cheer:       "bg-mint",
+  sad:         "bg-lavender",  shocked:     "bg-peach",     nervous:     "bg-yellow",
+  dejected:    "bg-navy/20",   sideEye:     "bg-yellow",    thumbsup:    "bg-mint",
+  wave:        "bg-mint",      peace:       "bg-mint",      ok:          "bg-mint",
+  armsCrossed: "bg-navy/30",   determined:  "bg-peach",     stop:        "bg-peach",
+  mic:         "bg-lavender",  singing:     "bg-lavender",  gaming:      "bg-mint",
   panic:       "bg-peach",
+};
+
+/** ムード別：吹き出し上部ボーダー色 */
+const MOOD_BORDER: Record<MoodType, string> = {
+  explain:     "border-t-mint",      happy:       "border-t-mint",      point:       "border-t-yellow",
+  recommend:   "border-t-lavender",  surprise:    "border-t-peach",     thinking:    "border-t-yellow",
+  serious:     "border-t-navy/40",   smile:       "border-t-mint",      laugh:       "border-t-mint",
+  worried:     "border-t-yellow",    angry:       "border-t-peach",     embarrassed: "border-t-lavender",
+  love:        "border-t-lavender",  excited:     "border-t-peach",     cheer:       "border-t-mint",
+  sad:         "border-t-lavender",  shocked:     "border-t-peach",     nervous:     "border-t-yellow",
+  dejected:    "border-t-navy/20",   sideEye:     "border-t-yellow",    thumbsup:    "border-t-mint",
+  wave:        "border-t-mint",      peace:       "border-t-mint",      ok:          "border-t-mint",
+  armsCrossed: "border-t-navy/30",   determined:  "border-t-peach",     stop:        "border-t-peach",
+  mic:         "border-t-lavender",  singing:     "border-t-lavender",  gaming:      "border-t-mint",
+  panic:       "border-t-peach",
 };
 
 const MOOD_ALT: Record<MoodType, string> = {
@@ -147,15 +142,16 @@ export default function MerinoNavigator({
   mood?: MoodType;
   children: React.ReactNode;
 }) {
-  const src    = MOOD_IMAGES[mood] ?? MOOD_IMAGES.explain;
-  const alt    = MOOD_ALT[mood]    ?? MOOD_ALT.explain;
-  const accent = MOOD_ACCENT[mood] ?? "bg-mint";
+  const src      = MOOD_IMAGES[mood] ?? MOOD_IMAGES.explain;
+  const alt      = MOOD_ALT[mood]    ?? MOOD_ALT.explain;
+  const iconBg   = MOOD_BG[mood]     ?? "bg-mint";
+  const borderT  = MOOD_BORDER[mood] ?? "border-t-mint";
 
   return (
     <div className="flex items-start gap-3 my-8 not-prose">
 
       {/* ── 丸アイコン ─────────────────────────────────────── */}
-      <div className={`shrink-0 relative w-12 h-12 sm:w-14 sm:h-14 rounded-full border-3 border-border ${accent} overflow-hidden shadow-[2px_2px_0px_0px_var(--color-border)]`}>
+      <div className={`shrink-0 relative w-12 h-12 sm:w-14 sm:h-14 rounded-full border-3 border-border ${iconBg} overflow-hidden shadow-[2px_2px_0px_0px_var(--color-border)]`}>
         <Image
           src={src}
           alt={alt}
@@ -167,8 +163,7 @@ export default function MerinoNavigator({
 
       {/* ── 吹き出し ──────────────────────────────────────────
           丸い吹き出し + 左上アクセントバー                      */}
-      <div className="flex-1 bg-white border-3 border-border rounded-2xl shadow-[3px_3px_0px_0px_var(--color-border)] overflow-hidden">
-        <div className={`h-[3px] w-full ${accent}`} />
+      <div className={`flex-1 bg-white border-3 border-border rounded-2xl shadow-[3px_3px_0px_0px_var(--color-border)] border-t-[5px] ${borderT}`}>
         <div className="px-5 py-4">
           <span className="text-xs font-black text-navy/35 mb-1.5 tracking-wide block">
             メリノちゃん

@@ -6,3 +6,5 @@ out
 *.key
 credentials*
 secrets*
+
+.vercel
