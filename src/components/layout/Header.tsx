@@ -11,7 +11,7 @@ export default function Header() {
           className="font-black text-lg tracking-tight leading-none group"
         >
           <span className="block text-[10px] font-bold text-navy/40 tracking-widest uppercase mb-0.5">
-            Merino-chan&apos;s
+            メリノちゃんの
           </span>
           VTuberガイド
         </Link>
