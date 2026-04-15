@@ -1,0 +1,147 @@
+---
+title: "VSeeFace完全ガイド（日本語）2026 — 無料フェイストラッキングソフトの使い方"
+description: "VSeeFaceは海外発の無料フェイストラッキングソフト。VTubeStudioの代替として使えます。日本語情報が少ないVSeeFaceの基本設定・使い方・VTubeStudioとの違いを解説。"
+category: "software"
+tags: ["VSeeFace", "フェイストラッキング", "無料ソフト", "海外ツール", "VTuber配信環境"]
+publishedAt: "2026-04-16"
+updatedAt: "2026-04-16"
+ogImage: /images/ogp/vseeface-guide.png
+sources:
+  - url: "https://www.vseeface.avi.is/"
+    title: "VSeeFace — 公式サイト"
+    accessedAt: "2026-04-16"
+  - url: "https://github.com/emilianavt/VSeeFace"
+    title: "VSeeFace — GitHub リポジトリ"
+    accessedAt: "2026-04-16"
+  - url: "https://denchisoft.com/"
+    title: "VTube Studio — 公式サイト（比較用）"
+    accessedAt: "2026-04-16"
+factcheck: "2026-04-16"
+needsReview: false
+---
+
+<MerinoNavigator mood="explain">
+「VSeeFace」という名前、聞いたことありますか？
+海外のVTuberが多く使っているフェイストラッキングソフトです。
+日本語の情報がほとんどないので、まとめてみました！
+</MerinoNavigator>
+
+## VSeeFaceとは？
+
+VSeeFaceは**emilianavt**氏が開発した無料のフェイストラッキング＆アバター表示ソフトです。
+
+- **完全無料**（オープンソース）
+- **Windows対応**（Mac非対応）
+- Live2Dモデル・VRMモデル（3D）両方に対応
+- Webカメラ / iPhoneどちらでもトラッキング可能
+- [公式サイト](https://www.vseeface.avi.is/)からダウンロード可能
+
+<Callout type="point">
+VSeeFaceは日本ではあまり知られていませんが、<strong>海外のVTuberコミュニティでは定番ツールの一つ</strong>です。
+特に「VTubeStudioを使わずにPCだけで完結させたい」ケースで重宝されています。
+</Callout>
+
+---
+
+## VTubeStudio との違い
+
+日本でよく使われる[VTubeStudio](https://denchisoft.com/)と比較します。
+
+<ComparisonTable
+  headers={["", "VSeeFace", "VTubeStudio（PC）"]}
+  rows={[
+    ["価格", "無料", "基本無料（Pro版¥1,500）"],
+    ["対応OS", "Windows のみ", "Windows / Mac / iOS / Android"],
+    ["Live2D対応", "✅", "✅"],
+    ["VRM（3Dモデル）対応", "✅", "❌（別途Luppet等が必要）"],
+    ["iPhoneトラッキング", "✅（iPhone連携可）", "✅（メイン機能）"],
+    ["Webカメラトラッキング", "✅（AI顔認識）", "✅（Pro版で機能拡張）"],
+    ["OBSとの連携", "✅", "✅"],
+    ["日本語サポート", "△（英語UIのみ）", "✅（日本語UI）"],
+    ["更新頻度", "△（不定期）", "◎（定期更新）"],
+  ]}
+/>
+
+<MerinoNavigator mood="thinking">
+3Dモデル（VRMファイル）を使いたい場合、VSeeFaceは有力な選択肢です。
+Live2Dだけなら日本語対応のVTubeStudioの方が使いやすいです。
+</MerinoNavigator>
+
+---
+
+## VSeeFaceの主な使いどころ
+
+### 1. VRM（3D）モデルをトラッキングしたい
+
+VRoidStudioで作ったVRMモデルをVSeeFaceで動かすのが代表的な使い方です。
+VTubeStudioはLive2Dに特化しており、VRMネイティブ対応ではありません。
+
+### 2. Webカメラだけでトラッキングしたい（iPhoneなし）
+
+VSeeFaceはWebカメラのAI顔認識でもトラッキング可能です。
+iPhoneを持っていない・使いたくない場合の代替手段として機能します。
+
+### 3. 完全無料で始めたい
+
+VTubeStudioのPro版（¥1,500）を払わずに同等の機能を使いたい場合。
+ただし日本語UIがないため、英語に抵抗がない人向けです。
+
+---
+
+## 基本的なセットアップの流れ
+
+<StepGuide
+  steps={[
+    { title: "ダウンロード", description: "公式サイト（vseeface.avi.is）からWindowsの最新版をダウンロードして解凍。インストール不要でそのまま起動できます" },
+    { title: "モデルを読み込む", description: "起動後「Load model」からLive2D（.moc3）またはVRM（.vrm）ファイルを選択します" },
+    { title: "カメラを設定する", description: "Settings → Camera でPCのWebカメラを選択。またはiPhoneとの連携（VTube Studio経由）を設定します" },
+    { title: "OBSに映像を取り込む", description: "VSeeFaceはウィンドウキャプチャでOBSに取り込めます。背景が透明な状態で出力するにはSPout2プラグインを使用します" },
+    { title: "トラッキングを調整", description: "Settings内でまばたき感度・表情の閾値を調整します。顔の追従が速すぎる/遅すぎる場合もここで変更" },
+  ]}
+/>
+
+<Callout type="warning">
+VSeeFaceの公式ドキュメントは英語のみです。設定に迷った場合はGitHubのIssuesページ（英語）やr/VirtualYoutubers（Reddit）が参考になります。
+</Callout>
+
+---
+
+## よくある問題と対処法
+
+<ComparisonTable
+  headers={["問題", "対処法"]}
+  rows={[
+    ["顔が認識されない", "照明を明るくする・カメラ解像度を確認する"],
+    ["動きがカクカクする", "PCのスペックが足りない可能性。設定でトラッキング精度を下げる"],
+    ["背景が透明にならない", "Spout2プラグインをOBSに追加してVSeeFaceと連携する"],
+    ["モデルが読み込めない", "ファイルパスに日本語が含まれていないか確認（英数字パスに移動）"],
+    ["表情が反応しない", "Settings → Blend shapes でパラメータのマッピングを確認"],
+  ]}
+/>
+
+---
+
+## VSeeFaceが向いている人・向いていない人
+
+<ComparisonTable
+  headers={["", "向いている", "向いていない"]}
+  rows={[
+    ["モデルの種類", "VRMモデルを使いたい人", "Live2Dメインの人（VTubeStudioの方が快適）"],
+    ["環境", "Webカメラだけで始めたい人", "iPhoneトラッキングを最大限使いたい人"],
+    ["言語", "英語UIに抵抗がない人", "日本語ツールを使いたい人"],
+    ["費用", "完全無料にこだわる人", "サポートや日本語情報を重視する人"],
+  ]}
+/>
+
+<MerinoNavigator mood="happy">
+日本語情報が少ないぶん、VSeeFaceを使いこなせれば差別化になります。
+3Dモデルで活動したい方はぜひ試してみてください！
+</MerinoNavigator>
+
+---
+
+## 関連リンク
+
+- [VSeeFace 公式サイト](https://www.vseeface.avi.is/)
+- [VSeeFace GitHub](https://github.com/emilianavt/VSeeFace)（最新版ダウンロード・バグ報告）
+- [VTube Studio 公式](https://denchisoft.com/)（Live2D派はこちら）
