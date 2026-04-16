@@ -240,20 +240,17 @@ def generate_thumbnail(title: str, category: str, slug: str,
     # ── 縦区切り線 ────────────────────────────────────────
     draw.rectangle([SPLIT - BORDER, 0, SPLIT, H], fill=DARK)
 
-    # ── カテゴリバッジ ────────────────────────────────────
-    draw_badge(draw, PAD, PAD, cat_label, col, f(18))
-
-    # ── タイトル（左ゾーンに収める） ──────────────────────
-    avail_w = SPLIT - BORDER - PAD * 2
-    title_y = PAD + 50
+    # ── テキストレイアウト計算（センター配置） ────────────
+    BADGE_H   = 35          # バッジ高さ概算
+    BADGE_GAP = 18          # バッジ〜タイトル間隔
+    avail_w   = SPLIT - BORDER - PAD * 2
 
     def fit_title(size, max_lines):
         fnt   = f(size)
         lh    = int(size * 1.25)
-        words = list(title)
         lines = []
         cur   = ""
-        for ch in words:
+        for ch in title:
             cand = cur + ch
             bb   = draw.textbbox((0, 0), cand, font=fnt)
             if (bb[2] - bb[0]) <= avail_w:
@@ -264,8 +261,7 @@ def generate_thumbnail(title: str, category: str, slug: str,
                 cur = ch
         if cur:
             lines.append(cur)
-        total_h = title_y + len(lines) * lh
-        if len(lines) <= max_lines and total_h <= H - PAD - 10:
+        if len(lines) <= max_lines:
             return lines, fnt, lh
         return None
 
@@ -275,20 +271,32 @@ def generate_thumbnail(title: str, category: str, slug: str,
         if result:
             break
 
-    if result:
-        lines, title_fnt, lh = result
-        ty = title_y
-        for line in lines:
-            draw.text((PAD, ty), line, font=title_fnt, fill=DARK)
-            ty += lh
+    lines, title_fnt, lh = result or ([""], f(24), 30)
+    title_block_h = len(lines) * lh
 
-    # ── メリノちゃん（右ゾーン中央下寄せ） ───────────────
+    # バッジ + ギャップ + タイトルを縦センター
+    total_h  = BADGE_H + BADGE_GAP + title_block_h
+    start_y  = (H - total_h) // 2
+
+    # ── カテゴリバッジ ────────────────────────────────────
+    draw_badge(draw, PAD, start_y, cat_label, col, f(18))
+
+    # ── タイトル ──────────────────────────────────────────
+    ty = start_y + BADGE_H + BADGE_GAP
+    for line in lines:
+        draw.text((PAD, ty), line, font=title_fnt, fill=DARK)
+        ty += lh
+
+    # ── メリノちゃん（左向き・右ゾーン中央・下に少しはみ出し） ──
     merino = load_merino(pose_name, H - 10)
     if merino:
+        # 左向きに反転
+        merino = merino.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         right_zone_w = W - SPLIT
         mx = SPLIT + (right_zone_w - merino.width) // 2
         mx = max(mx, SPLIT + 5)
-        my = H - merino.height - 5
+        # 下に30px余分にはみ出させて「地面に立っている」感
+        my = H - merino.height + 30
         img.paste(merino, (mx, my), merino)
 
     # ── 外枠 ──────────────────────────────────────────────
