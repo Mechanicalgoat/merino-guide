@@ -3,6 +3,7 @@ OGP画像生成スクリプト v3
 完全2ゾーン分割レイアウト（テキスト左 / キャラ右）
 Neubrutalism: ハードボーダー・シャドウなしテキスト・ベタ色分割
 """
+import hashlib
 import os
 import re
 import sys
@@ -20,7 +21,27 @@ ARTICLES_DIR = ROOT / "content" / "articles"
 OUTPUT_DIR   = ROOT / "public" / "images" / "ogp"
 MERINO_DIR   = ROOT / "public" / "images" / "merino"
 
-# カテゴリ別メリノちゃん画像（constants.tsと同期）
+# 記事ごとの固有ポーズプール（スラグハッシュで振り分け）
+MERINO_POSE_POOL = [
+    "merino-explain",
+    "merino-happy",
+    "merino-thinking",
+    "merino-point",
+    "merino-recommend",
+    "merino-serious",
+    "merino-excited",
+    "merino-ok",
+    "merino-thumbsup",
+    "merino-wave",
+    "merino-smile",
+    "merino-peace",
+    "merino-determined",
+    "merino-cheer",
+    "merino-mic",
+    "merino-surprise",
+]
+
+# カテゴリ別フォールバック（frontmatter に merino 指定がない & ハッシュ不使用の場合）
 MERINO_BY_CATEGORY = {
     "model":           "merino-recommend",
     "getting-started": "merino-explain",
@@ -138,8 +159,16 @@ def px_wrap(draw: ImageDraw.ImageDraw, text: str, fnt,
 
 
 # ── メリノちゃん読み込み ──────────────────────────────────
-def load_merino(category: str = "getting-started") -> Image.Image | None:
-    name = MERINO_BY_CATEGORY.get(category, "merino-explain")
+def load_merino(category: str = "getting-started", slug: str = "", merino_override: str = "", pose_index: int = -1) -> Image.Image | None:
+    if merino_override:
+        name = merino_override
+    elif pose_index >= 0:
+        name = MERINO_POSE_POOL[pose_index % len(MERINO_POSE_POOL)]
+    elif slug:
+        idx  = int(hashlib.md5(slug.encode()).hexdigest(), 16) % len(MERINO_POSE_POOL)
+        name = MERINO_POSE_POOL[idx]
+    else:
+        name = MERINO_BY_CATEGORY.get(category, "merino-explain")
     path = MERINO_DIR / f"{name}.png"
     if not path.exists():
         path = MERINO_DIR / "merino-explain.png"
@@ -178,7 +207,7 @@ def draw_badge(draw: ImageDraw.ImageDraw, x: int, y: int,
 
 
 # ── メイン生成 ────────────────────────────────────────────
-def generate_ogp(title: str, category: str, slug: str) -> Path:
+def generate_ogp(title: str, category: str, slug: str, merino_override: str = "", pose_index: int = -1) -> Path:
     cat_col   = CAT_COLORS.get(category, (127, 255, 212))
     cat_label = CAT_LABELS.get(category, category)
 
@@ -205,7 +234,7 @@ def generate_ogp(title: str, category: str, slug: str) -> Path:
     # ─────────────────────────────────────────────────────
     # メリノちゃん：右ゾーン中央、ボトムアンカー
     # ─────────────────────────────────────────────────────
-    merino = load_merino(category)
+    merino = load_merino(category, slug, merino_override, pose_index)
     if merino:
         char_zone_w = W - SPLIT
         # 右ゾーン内で水平中央寄せ
@@ -307,13 +336,16 @@ def parse_frontmatter(mdx_path: Path) -> dict:
 def main():
     print("OGP v3 start...\n")
     generated = []
-    for mdx in sorted(ARTICLES_DIR.glob("*.mdx")):
+    mdx_list = sorted(ARTICLES_DIR.glob("*.mdx"))
+    for i, mdx in enumerate(mdx_list):
         fm       = parse_frontmatter(mdx)
         title    = fm.get("title", mdx.stem)
         category = fm.get("category", "model")
         slug     = mdx.stem
-        print(f"Generating: {slug}")
-        generated.append(generate_ogp(title, category, slug))
+        merino_override = fm.get("merino", "")
+        pose_index = i if not merino_override else -1
+        print(f"Generating: {slug}  ({MERINO_POSE_POOL[pose_index % len(MERINO_POSE_POOL)] if not merino_override else merino_override})")
+        generated.append(generate_ogp(title, category, slug, merino_override, pose_index))
     print(f"\nDone: {len(generated)} images -> {OUTPUT_DIR}")
     return generated
 
