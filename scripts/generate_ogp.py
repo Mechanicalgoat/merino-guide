@@ -4,7 +4,9 @@ OGP画像生成スクリプト v3
 Neubrutalism: ハードボーダー・シャドウなしテキスト・ベタ色分割
 """
 import hashlib
+import math
 import os
+import random
 import re
 import sys
 import yaml
@@ -188,6 +190,111 @@ def load_merino(category: str = "getting-started", slug: str = "", merino_overri
         return None
 
 
+# ── カテゴリ別イラスト風背景パターン ─────────────────────
+def _darker(col: tuple, amount: int = 35) -> tuple:
+    return tuple(max(0, c - amount) for c in col)
+
+def _lighter(col: tuple, amount: int = 40) -> tuple:
+    return tuple(min(255, c + amount) for c in col)
+
+def draw_pattern_model(draw: ImageDraw.ImageDraw, col: tuple, x0: int):
+    """model — ラベンダー地に輝く星✦とダイヤ◆"""
+    rng = random.Random(42)
+    bg2 = _lighter(col, 30)
+    # グラデーション風：2色帯を交互に
+    for row in range(0, H, 60):
+        c = bg2 if (row // 60) % 2 == 0 else col
+        draw.rectangle([x0, row, W, row + 60], fill=c)
+    # 星形（4点）
+    dark = _darker(col, 50)
+    for _ in range(22):
+        cx = rng.randint(x0 + 10, W - 10)
+        cy = rng.randint(10, H - 10)
+        r  = rng.randint(6, 18)
+        pts = []
+        for k in range(8):
+            angle = math.pi / 4 * k
+            rad   = r if k % 2 == 0 else r // 2
+            pts.append((cx + rad * math.cos(angle), cy + rad * math.sin(angle)))
+        draw.polygon(pts, fill=dark, outline=None)
+    # 小さいドット
+    for _ in range(30):
+        cx = rng.randint(x0 + 5, W - 5)
+        cy = rng.randint(5, H - 5)
+        r  = rng.randint(3, 7)
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=_darker(col, 30))
+
+def draw_pattern_getting_started(draw: ImageDraw.ImageDraw, col: tuple, x0: int):
+    """getting-started — ミント地に浮かぶ丸バブル"""
+    rng = random.Random(7)
+    draw.rectangle([x0, 0, W, H], fill=col)
+    for _ in range(28):
+        cx = rng.randint(x0 + 5, W - 5)
+        cy = rng.randint(5, H - 5)
+        r  = rng.randint(10, 55)
+        lgt = _lighter(col, rng.randint(20, 50))
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=lgt, outline=_darker(col, 20), width=2)
+
+def draw_pattern_software(draw: ImageDraw.ImageDraw, col: tuple, x0: int):
+    """software — ピーチ地にドット方眼"""
+    rng = random.Random(99)
+    draw.rectangle([x0, 0, W, H], fill=_lighter(col, 30))
+    dot_col = _darker(col, 40)
+    step = 28
+    for gx in range(x0, W + step, step):
+        for gy in range(0, H + step, step):
+            draw.ellipse([gx - 3, gy - 3, gx + 3, gy + 3], fill=dot_col)
+    # ランダムに大きいドット
+    for _ in range(10):
+        cx = rng.randint(x0 + 20, W - 20)
+        cy = rng.randint(20, H - 20)
+        r  = rng.randint(12, 28)
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=_darker(col, 25), outline=None)
+
+def draw_pattern_equipment(draw: ImageDraw.ImageDraw, col: tuple, x0: int):
+    """equipment — イエロー地にハーフトーン斜め縞"""
+    draw.rectangle([x0, 0, W, H], fill=col)
+    stripe = _darker(col, 35)
+    width  = 18
+    gap    = 36
+    for offset in range(-H, W - x0 + H, gap):
+        x1 = x0 + offset
+        pts = [(x1, 0), (x1 + width, 0), (x1 + width + H, H), (x1 + H, H)]
+        draw.polygon(pts, fill=stripe)
+
+def draw_pattern_management(draw: ImageDraw.ImageDraw, col: tuple, x0: int):
+    """management — ミント地にコンフェッティ（小矩形・菱形）"""
+    rng = random.Random(13)
+    draw.rectangle([x0, 0, W, H], fill=col)
+    shapes = ["rect", "diamond", "circle"]
+    colors = [_darker(col, 50), _darker(col, 30), _lighter(col, 40)]
+    for _ in range(40):
+        cx  = rng.randint(x0, W)
+        cy  = rng.randint(0, H)
+        s   = rng.randint(8, 22)
+        shp = rng.choice(shapes)
+        fc  = rng.choice(colors)
+        if shp == "rect":
+            angle_off = rng.randint(-15, 15)
+            draw.rectangle([cx - s, cy - s // 2, cx + s, cy + s // 2], fill=fc)
+        elif shp == "diamond":
+            draw.polygon([(cx, cy - s), (cx + s, cy), (cx, cy + s), (cx - s, cy)], fill=fc)
+        else:
+            draw.ellipse([cx - s // 2, cy - s // 2, cx + s // 2, cy + s // 2], fill=fc)
+
+PATTERN_FUNCS = {
+    "model":           draw_pattern_model,
+    "getting-started": draw_pattern_getting_started,
+    "software":        draw_pattern_software,
+    "equipment":       draw_pattern_equipment,
+    "management":      draw_pattern_management,
+}
+
+def draw_bg_pattern(draw: ImageDraw.ImageDraw, category: str, col: tuple, x0: int):
+    fn = PATTERN_FUNCS.get(category, draw_pattern_getting_started)
+    fn(draw, col, x0)
+
+
 # ── Neubrutalism バッジ描画 ──────────────────────────────
 def draw_badge(draw: ImageDraw.ImageDraw, x: int, y: int,
                text: str, bg: tuple, fnt) -> int:
@@ -215,21 +322,9 @@ def generate_ogp(title: str, category: str, slug: str, merino_override: str = ""
     draw = ImageDraw.Draw(img)
 
     # ─────────────────────────────────────────────────────
-    # 右ゾーン：カテゴリカラー背景
+    # 右ゾーン：カテゴリ別イラスト風パターン背景
     # ─────────────────────────────────────────────────────
-    draw.rectangle([SPLIT, 0, W, H], fill=cat_col)
-
-    # 右ゾーン装飾：大型装飾文字（カテゴリ頭文字）— UNFORGETTABLE要素
-    # frontend-design: 「意図的な」大型タイポグラフィ装飾
-    deco_char = cat_label[0]  # 「モ」「は」「ソ」「機」「運」
-    deco_fnt  = f(360)
-    deco_w    = tw(draw, deco_char, deco_fnt)
-    deco_h    = th(draw, deco_char, deco_fnt)
-    deco_x    = SPLIT + (W - SPLIT - deco_w) // 2
-    deco_y    = (H - deco_h) // 2 - 20
-    # 暗め（カテゴリ色より20暗い）で描画 → 背景装飾感
-    shadow_col = tuple(max(0, c - 40) for c in cat_col)
-    draw.text((deco_x, deco_y), deco_char, font=deco_fnt, fill=shadow_col)
+    draw_bg_pattern(draw, category, cat_col, SPLIT)
 
     # ─────────────────────────────────────────────────────
     # メリノちゃん：右ゾーン中央、ボトムアンカー
